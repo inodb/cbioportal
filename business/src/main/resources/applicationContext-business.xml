@@ -44,7 +44,7 @@
             <property name="entityAttributeMapper" ref="entityAttributeMapper" />
         </bean>
 
-        <!-- enable component scanning (beware that this does not enable mapper scanning!) -->    
+        <!-- enable component scanning (beware that this does not enable mapper scanning!) -->
         <context:component-scan base-package="org.mskcc.cbio.portal.service" />
 
         <!-- enable autowire -->
@@ -65,13 +65,13 @@
         </bean>
 
     </beans>
-  
+
     <beans profile="dbcp">
         <!-- business data source -->
         <!-- setting minIdle/maxIdle to 1 doesn't limit the number of active -->
         <bean id="businessDataSource" destroy-method="close" class="org.apache.commons.dbcp.BasicDataSource">
             <property name="driverClassName" value="${db.driver}"/>
-            <property name="url" value="${db.connection_string}${db.portal_db_name}?zeroDateTimeBehavior=convertToNull"/>
+            <property name="url" value="${db.url}&amp;zeroDateTimeBehavior=convertToNull"/>
             <property name="username" value="${db.user}"/>
             <property name="password" value="${db.password}"/>
             <property name="minIdle" value="0"/>

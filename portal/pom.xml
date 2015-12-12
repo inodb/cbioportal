@@ -68,7 +68,7 @@
 	  </plugin>
 
 	  <!-- war plugin config -->
-	  <plugin>            
+	  <plugin>
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-war-plugin</artifactId>
 		<version>2.2</version>
@@ -152,6 +152,32 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-clean-plugin</artifactId>
+              <version>2.5</version>
+              <executions>
+                <execution>
+                  <id>clean-war-artifacts</id>
+                  <phase>install</phase>
+                  <goals><goal>clean</goal></goals>
+                  <configuration>
+                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                    <filesets>
+                      <fileset>
+                        <directory>target/portal</directory>
+                      </fileset>
+                      <fileset>
+                        <directory>target/dependency</directory>
+                        <excludes>
+                          <exclude>webapp-runner.jar</exclude>
+                        </excludes>
+                      </fileset>
+                    </filesets>
+                  </configuration>
+                </execution>
+              </executions>
             </plugin>
 
 	</plugins>

@@ -1,0 +1,15 @@
+{
+    "name": "cBioPortal",
+    "description": "The cBioPortal for Cancer Genomics provides, visualization, analysis, and download of large-scale cancer genomics data sets.",
+    "repository": "https://github.com/jkutner/cbioportal",
+    "addons": ["cleardb"],
+    "buildpacks": [
+        {
+
+            "url": "https://github.com/jkutner/cbioportal-buildpack"
+        },
+        {
+            "url": "https://github.com/heroku/heroku-buildpack-java#jdbc"
+        }
+    ]
+}

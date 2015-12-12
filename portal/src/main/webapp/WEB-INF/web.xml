@@ -22,12 +22,12 @@
     <!-- jndi profile is defined here to prevent exceptions during war deployment -->
     <context-param>
         <param-name>spring.profiles.active</param-name>
-        <param-value>jndi,${authenticate}</param-value>
+        <param-value>dbcp,${authenticate}</param-value>
     </context-param>
-    <context-param>  
-        <param-name>spring.liveBeansView.mbeanDomain</param-name>  
-        <param-value>jndi,${authenticate}</param-value>  
-    </context-param> 
+    <context-param>
+        <param-name>spring.liveBeansView.mbeanDomain</param-name>
+        <param-value>dbcp,${authenticate}</param-value>
+    </context-param>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -42,7 +42,7 @@
     <context-param>
       <param-name>log4jConfigLocation</param-name>
       <param-value>file://${PORTAL_HOME}/src/main/resources/log4j.properties</param-value>
-    </context-param> 
+    </context-param>
 
     <!-- listeners -->
     <listener>
@@ -85,7 +85,7 @@
         <display-name>File Upload</display-name>
         <description>
             Applied to file upload requests.
-            Wraps the request, allowing it to be used as a regular request, 
+            Wraps the request, allowing it to be used as a regular request,
             'as if' it were parsed by the Servlet API.
         </description>
         <filter-class>org.mskcc.cbio.portal.util.FileUploadFilter</filter-class>
@@ -118,7 +118,7 @@
     </filter-mapping>
 
     <!-- servlet definitions & mappings -->
-    
+
     <servlet>
         <servlet-name>portal</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -236,7 +236,7 @@
         <servlet-name>CheckGeneSymbolJSON</servlet-name>
         <url-pattern>/CheckGeneSymbol.json</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
     	<servlet-name>ClinicalFreeFormJSON</servlet-name>
         <servlet-class>org.mskcc.cbio.portal.servlet.ClinicalFreeFormJSON</servlet-class>
@@ -389,17 +389,17 @@
         <servlet-name>TumorMapServlet</servlet-name>
         <servlet-class>org.mskcc.cbio.portal.servlet.TumorMapServlet</servlet-class>
     </servlet>
-    
+
     <servlet-mapping>
         <servlet-name>TumorMapServlet</servlet-name>
         <url-pattern>/index.tumormap</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>TumorMapServlet</servlet-name>
         <url-pattern>/tumormap.json</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>patient_view</servlet-name>
         <servlet-class>org.mskcc.cbio.portal.servlet.PatientView</servlet-class>
@@ -439,7 +439,7 @@
         <servlet-name>MutationsJSON</servlet-name>
         <url-pattern>/mutations.json</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>CnaJSON</servlet-name>
         <servlet-class>org.mskcc.cbio.portal.servlet.CnaJSON</servlet-class>
@@ -466,7 +466,7 @@
         <servlet-name>ClinicalTrialsJSON</servlet-name>
         <url-pattern>/clinicaltrials.json</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>SimilarPatientsJSON</servlet-name>
         <servlet-class>org.mskcc.cbio.portal.servlet.SimilarPatientsJSON</servlet-class>
@@ -475,7 +475,7 @@
         <servlet-name>SimilarPatientsJSON</servlet-name>
         <url-pattern>/similar_patients.json</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>cancer_study_view</servlet-name>
         <servlet-class>org.mskcc.cbio.portal.servlet.CancerStudyView</servlet-class>
@@ -484,7 +484,7 @@
         <servlet-name>cancer_study_view</servlet-name>
         <url-pattern>/study.do</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>DrugsJSON</servlet-name>
         <servlet-class>org.mskcc.cbio.portal.servlet.DrugsJSON</servlet-class>
@@ -583,7 +583,7 @@
         <servlet-name>calcFisherExactTest</servlet-name>
         <url-pattern>/calcFisherExact.do</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>overRepresentationAnalysisJSON</servlet-name>
         <servlet-class>org.mskcc.cbio.portal.servlet.OverRepresentationAnalysisJSON</servlet-class>
@@ -592,6 +592,6 @@
         <servlet-name>overRepresentationAnalysisJSON</servlet-name>
         <url-pattern>/oranalysis.do</url-pattern>
     </servlet-mapping>
-    
+
 
 </web-app>
