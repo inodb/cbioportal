@@ -18,14 +18,14 @@
     "JAVA_OPTS": {
       "description":"options for jvm",
       "value": "-Xmx300m -Xms300m -XX:+UseCompressedOops"
-    },
-  }
+    }
+  },
   "buildpacks": [
     {
       "url": "https://github.com/inodb/cbioportal-buildpack"
     },
     {
       "url": "https://github.com/heroku/heroku-buildpack-java"
-    },
+    }
   ]
 }
