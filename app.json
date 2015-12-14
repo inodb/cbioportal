@@ -11,10 +11,6 @@
     "genomics"
   ],
   "env": {
-    "PORTAL_HOME": {
-      "description": "repository home directory at runtime",
-      "value": "/app"
-    },
     "JAVA_OPTS": {
       "description":"options for jvm",
       "value": "-Xmx300m -Xms300m -XX:+UseCompressedOops"
