@@ -17,7 +17,7 @@
     },
     "MAVEN_CUSTOM_OPTS": {
         "description":"set heroku profile for mvn",
-        "value":"-Pheroku,public -Dskiptests"
+        "value":"-Pheroku,public -DskipTests"
     }
   },
   "buildpacks": [
