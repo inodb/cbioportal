@@ -1,7 +1,6 @@
 {
   "name": "cBioPortal",
   "description":"The cBioPortal for Cancer Genomics provides visualization, analysis and download of large-scale cancer genomics data sets.",
-  "repository":"https://github.com/cbioportal/cbioportal",
   "logo":"http://www.cbioportal.org/images/cbioportal_logo.png",
   "keywords": [
     "java",
