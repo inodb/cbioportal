@@ -12,15 +12,17 @@ phantomjs --ignore-ssl-errors=true ${DIR}/make_screenshot.js 'http://localhost:8
 # upload the image
 curl -F "clbin=@${DIR}/screenshots/patient_view_lgg_ucsf_2014_case_id_P04.png" https://clbin.com
 
-# make sure screenshot is still the same as the one in the repo
-git diff --quiet -- ${DIR}/screenshots/patient_view_lgg_ucsf_2014_case_id_P04.png
+# make sure screenshot is still the same as the one in the repo, if not upload
+# the image
+git diff --quiet -- ${DIR}/screenshots/patient_view_lgg_ucsf_2014_case_id_P04.png || \
+    (echo "screenshot differs see:" && curl -F "clbin=@${DIR}/screenshots/patient_view_lgg_ucsf_2014_case_id_P04.png" https://clbin.com && exit 1)
 
 # studie view screenshot
 phantomjs --ignore-ssl-errors=true --web-security=false ${DIR}/make_screenshot.js 'http://localhost:8080/study.do?cancer_study_id=lgg_ucsf_2014' \
                               "${DIR}/screenshots/study_view_lgg_ucsf_2014.png" \
                               5000
 
-# upload the image
-curl -F "clbin=@${DIR}/screenshots/study_view_lgg_ucsf_2014.png" https://clbin.com
-
-git diff --quiet -- ${DIR}/screenshots/study_view_lgg_ucsf_2014.png
+# make sure screenshot is still the same as the one in the repo, if not upload
+# the image
+git diff --quiet -- ${DIR}/screenshots/study_view_lgg_ucsf_2014.png || \
+    (echo "screenshot differs see:" && curl -F "clbin=@${DIR}/screenshots/study_view_lgg_ucsf_2014.png" https://clbin.com && exit 1)

@@ -15,3 +15,7 @@ Then run the tests:
 ```
 bash test/end-to-end/test_make_screenshots.sh
 ```
+Notice that the resulting screenshots are probably going to be slightly
+different from the ones included in the repo. PhantomJS, the library used for
+making the screenshots produces different screenhots on different machines. The
+ones included in the repo were taken on Travis CI.
