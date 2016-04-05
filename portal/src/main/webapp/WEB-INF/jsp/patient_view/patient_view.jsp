@@ -365,24 +365,131 @@ if (patientViewError!=null) {
         .datatable-show-more {
             float: left;
         }
-	.igv-link {
-		cursor: pointer;
-	}
-    /* Sample records style */
-    .sample-record-inline {
-        display: inline-block;
-        color: #428bca;
-        padding: 0 5px;
-    }
-    .sample-record-inline:last-child .sample-record-delimiter {
-		visibility: hidden;
-	}
-    #page_wrapper_table {
-        background-color: white;
-    }
-    #clinical_div {
-        overflow: hidden;
-    }
+		.igv-link {
+			cursor: pointer;
+		}
+		#cancer-study-name-link {
+			display: inline-block;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			max-width: 400px;
+		}
+		/* Sample records style */
+		.sample-record-inline {
+			display: inline-block;
+			color: #428bca;
+			padding: 0 5px;
+		}
+		.sample-record-inline:last-child .sample-record-delimiter {
+			visibility: hidden;
+		}
+		#page_wrapper_table {
+			background-color: white;
+		}
+		#clinical_div {
+			overflow: hidden;
+		}
+
+		/* Clinical Attributes Styling */
+		#more-patient-info {
+			display: flex;
+		}
+		#more-patient-info a {
+			display: flex;
+		}
+		/* Do not display clinical attributes on default */
+		.clinical-attribute {
+			display: none;
+		}
+		/* Show only following attributes */
+		.clinical-attribute[attr-id~="SEX"],
+		.clinical-attribute[attr-id~="GENDER"],
+		.clinical-attribute[attr-id~="AGE"],
+		.clinical-attribute[attr-id~="OS_STATUS"],
+		.clinical-attribute[attr-id~="OS_MONTHS"],
+		.clinical-attribute[attr-id~="CANCER_TYPE"],
+		.clinical-attribute[attr-id~="CANCER_TYPE_DETAILED"],
+		.clinical-attribute[attr-id~="KNOWN_MOLECULAR_CLASSIFIER"],
+		.clinical-attribute[attr-id~="OS_MONTHS"],
+	   	#more-patient-info a .clinical_attribute[attr-id~="PRIMARY_SITE"] {
+			display: inline;
+		}
+		/* Show comma in between clinical attributes */
+		.clinical-attribute + .clinical-attribute:before {
+			content: ", ";
+			color: #000;
+		}
+		/* Order clinical attributes */
+		.clinical-attribute[attr-id~="PATIENT_DISPLAY_NAME"],
+		.clinical-attribute[attr-id~="SAMPLE_DISPLAY_NAME"] {
+			order: 0;
+		}
+		.clinical-attribute[attr-id~="SEX"],
+		.clinical-attribute[attr-id~="GENDER"] {
+			order: 1;
+		}
+		.clinical-attribute[attr-id~="AGE"] {
+			order: 2;
+		}
+		.clinical-attribute[attr-id~="OS_STATUS"] {
+			order: 3;
+		}
+		.clinical-attribute[attr-id~="OS_MONTHS"] {
+			order: 4;
+		}
+		.clinical-attribute[attr-id~="DFS_STATUS"] {
+			order: 5;
+		}
+		.clinical-attribute[attr-id~="DFS_MONTHS"] {
+			order: 6;
+		}
+		#more-patient-info a .clinical_attribute[attr-id~="PRIMARY_SITE"] {
+			order: 7;
+		}
+		.clinical-attribute[attr-id~="CANCER_TYPE"] {
+			order: 8;
+		}
+		.clinical-attribute[attr-id~="CANCER_TYPE_DETAILED"] {
+			order: 9;
+		}
+		/* attributes with opening parenthesis */
+		.clinical-attribute[attr-id~="OS_MONTHS"]:before,
+		.clinical-attribute[attr-id~="DFS_MONTHS"]:before,
+		.clinical-attribute[attr-id~="CANCER_TYPE_DETAILED"]:before,
+		.clinical-attribute[attr-id~="PATIENT_DISPLAY_NAME"]:before,
+		.clinical-attribute[attr-id~="PRIMARY_SITE"]:before,
+		.clinical-attribute[attr-id~="SAMPLE_DISPLAY_NAME"]:before {
+			content: "\00a0(";
+			color: #428bca;
+		}
+		/* attributes with a closing parenthesis */
+		.clinical-attribute[attr-id~="CANCER_TYPE_DETAILED"]:after,
+		.clinical-attribute[attr-id~="PATIENT_DISPLAY_NAME"]:after,
+		.clinical-attribute[attr-id~="PRIMARY_SITE"]:after,
+		.clinical-attribute[attr-id~="SAMPLE_DISPLAY_NAME"]:after {
+			content: ")";
+		}
+		/* text after an attribute */
+		.clinical-attribute[attr-id~="OS_MONTHS"]:after, 
+		.clinical-attribute[attr-id~="DFS_MONTHS"]:after { 
+			content: " months)";
+		}
+		.clinical-attribute[attr-id~="AGE"]:after {
+			content: " years old";
+		}
+		/* attributes with special colors */
+		.clinical-attribute[attr-id~="OS_STATUS"][attr-value~="DECEASED"],
+		.clinical-attribute[attr-id~="OS_STATUS"][attr-value~="DEAD"],
+		.clinical-attribute[attr-id~="DFS_STATUS"] {
+			color: #f00;
+		}
+		.clinical-attribute[attr-id~="OS_STATUS"][attr-value~="LIVING"], 
+		.clinical-attribute[attr-id~="OS_STATUS"][attr-value~="ALIVE"],
+		.clinical-attribute[attr-id~="DFS_STATUS"][attr-value~="DiseaseFree"], 
+		.clinical-attribute[attr-id~="DFS_STATUS"][attr-value~="Yes"] {
+			color: #0f0;
+		}
 </style>
 
 <script type="text/javascript" src="js/src/patient-view/genomic-event-observer.js?<%=GlobalProperties.getAppVersion()%>"></script>
@@ -938,21 +1045,22 @@ function outputClinicalData() {
     });
 
     row = "<span id='more-patient-info'><b><u><a href='"+cbio.util.getLinkToPatientView(cancerStudyId,patientId)+"'>"+patientId+"</a></b></u><a>&nbsp;";
-    var patientDisplayName = guessClinicalData(patientInfo, ["PATIENT_DISPLAY_NAME"]);
-    if (patientDisplayName !== null) {
-        row +="("+patientInfo["PATIENT_DISPLAY_NAME"]+")&nbsp;";
-    }
     var info = [];
     var loc = "";
-    var primarySite = guessClinicalData(patientInfo, ["PRIMARY_SITE"]);
-    if (primarySite !== null) {
-        loc = (" (" + primarySite + ")");
-    }
-    var info = info.concat(formatPatientInfo(patientInfo).join(", ") + loc);
-    var info = info.concat(formatDiseaseInfo(patientInfo));
-    var info = info.concat(formatPatientStatus(patientInfo));
-    row += info.join(", ");
-    row += "</a></span><span id='topbar-cancer-study' style='text-align: right; float: right'>" + formatCancerStudyInfo(55)+ "</span><br />";
+	for (var key in patientInfo) {
+		var value = patientInfo[key];
+		if (value !== null) {
+			if ((key === "OS_MONTHS" || key === "DFS_MONTHS") && $.isNumeric(value)) {
+				value = Math.round(value);	
+			}
+			var info = info.concat("<span class='clinical-attribute' attr-id='"+key+"' attr-value='"+value+"'>"+patientInfo[key]+"</span>");
+		}
+	}
+    //var info = info.concat(formatPatientInfo(patientInfo).join(", ") + loc);
+    //var info = info.concat(formatDiseaseInfo(patientInfo));
+    //var info = info.concat(formatPatientStatus(patientInfo));
+    row += info.join("");
+    row += "</a><span id='topbar-cancer-study' style='text-align: right; margin-left: auto;'><a id='cancer-study-name-link' title='"+cancerStudyName+"' href=\"study.do?cancer_study_id="+cancerStudyId+"\"><b>"+cancerStudyName+"</b></a></span></span>";
     $("#clinical_div").append(row);
     $("#nav_div").appendTo($("#topbar-cancer-study"));
 
@@ -1074,18 +1182,6 @@ function outputClinicalData() {
         }
     }
 
-    function formatPatientInfo(clinicalData) {
-        var patientInfo = [];
-        var gender = guessClinicalData(clinicalData, ['GENDER','SEX']);
-        if (gender!==null)
-            patientInfo.push(gender);
-        var age = guessClinicalData(clinicalData, ['AGE']);
-        if (age!==null)
-            patientInfo.push(Math.floor(age) + " years old");
-
-        return patientInfo;
-    }
-
     function formatStateInfo(clinicalData) {
         var ret = null;
         var caseType = guessClinicalData(clinicalData, ["TUMOR_TYPE","SAMPLE_TYPE"]);
@@ -1107,11 +1203,6 @@ function outputClinicalData() {
             ret += ", "+sampleClass;
         }
         return ret;
-    }
-
-    function formatCancerStudyInfo(max_length) {
-        var studyNameShort = (cancerStudyName.length > max_length)? cancerStudyName.substring(0, max_length - 4) + "&nbsp;..." : cancerStudyName;
-        return "<a title='"+cancerStudyName+"' href=\"study.do?cancer_study_id="+cancerStudyId+"\"><b>"+studyNameShort+"</b></a>";
     }
 
     function formatNav() {
@@ -1227,39 +1318,6 @@ function outputClinicalData() {
         return diseaseInfo;
     }
 
-    function formatPatientStatus(clinicalData) {
-        var oss = guessClinicalData(clinicalData, ["OS_STATUS"]);
-        var ossLow = oss===null?null:oss.toLowerCase();
-        var dfss = guessClinicalData(clinicalData, ["DFS_STATUS"]);
-        var dfssLow = dfss===null?null:dfss.toLowerCase();
-        var osm = guessClinicalData(clinicalData, ["OS_MONTHS"]);
-        var dfsm = guessClinicalData(clinicalData, ["DFS_MONTHS"]);
-        var ret = [];
-        if (oss!==null && ossLow!=="unknown") {
-            var patientStatus = "<font color='"
-                    + (ossLow==="living"||ossLow==="alive" ? "green":"red")
-                    + "'>"
-                    + oss
-                    + "</font>";
-            if (osm!==null && osm!=='NA') {
-                patientStatus += " (" + Math.round(osm) + " months)";
-            }
-            ret.push(patientStatus);
-        }
-        if (dfss!==null && dfssLow!=="unknown") {
-            var patientStatus = "<font color='"
-                    + (dfssLow==="diseasefree" ? "green":"red")
-                    + "'>"
-                    + dfss
-                    + "</font>";
-            if (dfsm!==null && dfsm!=='NA') {
-                patientStatus += " (" + Math.round(dfsm) + " months)";
-            }
-            ret.push(patientStatus);
-        }
-        return ret;
-    }
-
     function getCaseColor(caseType) {
         if (!caseType) return "black";
         var caseTypeNorm = normalizedCaseType(caseType.toLowerCase());
@@ -1271,12 +1329,11 @@ function outputClinicalData() {
 
     function normalizedCaseType(caseType) {
         var caseTypeLower = caseType.toLowerCase();
-        if (caseTypeLower.indexOf("metastatic")>=0 || caseTypeLower.indexOf("metastasis")>=0)
+        if (caseTypeLower.indexOf("metasta")>=0)
             return "metastasis";
         if (caseTypeLower.indexOf("progressed")>=0
                 || caseTypeLower.indexOf("progression")>=0
-                || caseTypeLower.indexOf("recurred")>=0
-                || caseTypeLower.indexOf("recurrence")>=0)
+                || caseTypeLower.indexOf("recurr")>=0)
             return "progressed";
 
         return "primary";
