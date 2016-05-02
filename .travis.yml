@@ -18,6 +18,11 @@ install:
             mkdir -p ~/maven/$MAVEN_VERSION && \
             wget -O - http://www.eu.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | \
                 tar -C ~/maven/$MAVEN_VERSION --strip-components=1 -xzf -; }
+    # Install phantomJS version 2.1.1
+    - mkdir travis-phantomjs
+    - curl --output travis-phantomjs/phantomjs https://s3.amazonaws.com/circle-downloads/phantomjs-2.1.1
+    - chmod +x travis-phantomjs/phantomjs
+    - export PATH=${PWD}/travis-phantomjs:${PATH}
 
 before_script:
     - mkdir -p ~/.m2
