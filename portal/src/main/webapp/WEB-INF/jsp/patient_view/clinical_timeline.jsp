@@ -191,6 +191,7 @@
                     }
                 }
 
+                console.log(timeData);
                 var width = $("#td-content").width() - 75;
                 var timeline = clinicalTimeline
                         .width(width)
@@ -210,6 +211,7 @@
                         .toggleTrackCollapse("Specimen")
                         .enableTrackTooltips(false)
                         .enableZoom(false)
+                        .enableTrimmedTimeline(true)
                         .addPostTimelineHook(plotCaseLabelsInTimeline);
                 timeline();
                 $("#timeline-container").show();
