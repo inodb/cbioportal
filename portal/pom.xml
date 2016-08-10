@@ -147,6 +147,36 @@
           </execution>
         </executions>
       </plugin>
+      <!-- copy remote frontend repo files to local directory -->
+      <plugin>
+		<artifactId>maven-antrun-plugin</artifactId>
+		<!-- only needs to be executed for parent pom -->
+		<inherited>false</inherited>
+		<executions>
+		  <execution>
+			<phase>validate</phase>
+			<goals>
+			  <goal>run</goal>
+			</goals>
+			<configuration>
+			  <tasks>
+                <!-- Download clinical table for patient-view -->
+				<get src="${frontend.github.url}/patient/dist/clinical_table.js"
+                     dest="src/main/webapp/js/src/patient-view/clinical_table.js" />
+				<get src="${frontend.github.url}/patient/dist/clinical_table.html"
+                     dest="src/main/webapp/WEB-INF/jsp/patient_view/clinical_table.html" />
+                <!-- replace src tag in HTML to point to JS in right location -->
+				<replace file="src/main/webapp/WEB-INF/jsp/patient_view/clinical_table.html">
+				  <replacefilter
+					token="clinical_table.js"
+					value="js/src/patient-view/clinical_table.js">
+			      </replacefilter>
+				</replace>
+			  </tasks>
+			</configuration>
+		  </execution>
+		</executions>
+	  </plugin>
     </plugins>
 
     <filters>
@@ -194,6 +224,7 @@
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
     <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+    <frontend.github.url>https://raw.githubusercontent.com/inodb/cbioportal-frontend-test/5378ca0722d3be7d1ec9c27dfefea27bef56eded/</frontend.github.url>
   </properties>
 
   <!-- remove portal temp build files when building heroku -->
