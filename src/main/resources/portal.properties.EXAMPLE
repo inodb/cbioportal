@@ -3,13 +3,13 @@ app.name=cbioportal
 app.version=${timestamp}
 
 # database
-db.user=cbio_user
-db.password=somepassword
-db.host=localhost
-db.portal_db_name=cbioportal
+db.user=${CBIOPORTAL_DB_USER:cbio_user}
+db.password=${CBIOPORTAL_DB_PASSWORD:somepassword}
+db.host=${CBIOPORTAL_DB_HOST:localhost}
+db.portal_db_name=${CBIOPORTAL_DB_PORTAL_DB_NAME:cbioportal}
 db.driver=com.mysql.jdbc.Driver
-db.connection_string=jdbc:mysql://localhost/
-db.tomcat_resource_name=jdbc/cbioportal
+db.connection_string=${CBIOPORTAL_DB_CONNECTION_STRING:jdbc:mysql://localhost/}
+db.tomcat_resource_name=${CBIOPORTAL_DB_TOMCAT_RESOURCE_NAME:jdbc/cbioportal}
 # this is the *expected* DB version (expected by the code). Don't set it manually, it is filled by maven:
 db.version=${db.version}
 
