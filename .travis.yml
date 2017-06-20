@@ -12,9 +12,22 @@ env:
   - MAVEN_VERSION=3.3.9 TEST=core
   - MAVEN_VERSION=3.3.9 TEST=python-validator
   - MAVEN_VERSION=3.3.9 TEST=end-to-end
+  - MAVEN_VERSION=3.3.9 TEST=end-to-end-webdriverio
+  global:
+  - secure: fLGTh5E5YSSBKZEexj4tpvhyNlR98NNEUBrhkO9nVzn8W4XDkui1wjT6VSqhTauOWc9dMHou7fXgn2bxnXKYuMozijIoK8dtEJpE2mJ+HEb42Wjn776ou0kqg/JBFguY+Q+GWAUhtjjzeMlKawDBxsB15+DfKtZ2o8ZOU9ibzaw=
+  - secure: okcDVSIqgIdLKww9FRa64r8ieJ5zmreXsrDLrDso9Kh7j6BA6bcNllv+QrjjHIMQTvauXwFc8eCI3bpWQgPQB0yQbg+UPnm8MihA42B1cqCBNumSnmyOzKcHOAP/nFCKLUrfH188magpmf22iq3NJgmlvt6uJKQrCRTNHrECfEY=
+before_install:
+- |
+  if [[ "${TEST}" == end-to-end-webdriverio ]]
+    then
+        if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi &&
+        nvm install 6 && \
+        node --version && \
+        npm install -g webdriverio wdio-spec-reporter wdio-mocha-framework wdio-browserstack-service
+    fi
 install:
 - |
-  if [[ "${TEST}" == core || "${TEST}" == end-to-end ]]
+  if [[ "${TEST}" == core || "${TEST}" =~ ^end-to-end.* ]]
   then
       mkdir -p ~/maven
       test -d ~/maven/$MAVEN_VERSION/bin || { \
@@ -69,7 +82,7 @@ script:
           clean integration-test
   fi
 - |
-  if [[ "${TEST}" == end-to-end ]]
+  if [[ "${TEST}" =~ ^end-to-end.* ]]
   then
       ~/maven/$MAVEN_VERSION/bin/mvn \
           -e -DPORTAL_HOME=$PORTAL_HOME \
@@ -92,6 +105,15 @@ script:
       # spot visual regression by comparing screenshots in the repo with
       # screenshots of this portal loaded with the data from the amazon db
       bash test/end-to-end/test_make_screenshots.sh test/end-to-end/screenshots.yml
+  fi
+- |
+  if [[ "${TEST}" == end-to-end-webdriverio ]]
+  then
+      cd test/end-to-end && \
+      docker-compose up -d cbioportal && \
+      cd ../.. && \
+      sleep 20s && \
+      wdio wdio.conf.js
   fi
 notifications:
   slack: cbioportal:S2qVTFTFMtizONhCOe8BYxS6
