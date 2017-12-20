@@ -64,13 +64,6 @@
     </dependency>
   </dependencies>
 
-  <repositories>
-    <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-    </repository>
-  </repositories>
-
   <build>
     <!-- final name of the app -->
     <plugins>
@@ -91,27 +84,6 @@
                   <artifactId>webapp-runner</artifactId>
                   <version>8.0.24.0</version>
                   <destFileName>webapp-runner.jar</destFileName>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-          <!-- unpack cbioportal-frontend -->
-          <execution>
-            <id>unpack</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>com.github.cbioportal</groupId>
-                  <artifactId>cbioportal-frontend</artifactId>
-                  <version>5d7f2b1f02cd024392028132db3307fc9d0f8abf</version>
-                  <type>jar</type>
-                  <outputDirectory>.</outputDirectory>
-                  <excludes>*index*</excludes>
-                  <overWrite>true</overWrite>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -151,10 +123,6 @@
               </includes>
               <targetPath>WEB-INF</targetPath>
               <filtering>true</filtering>
-            </resource>
-            <resource>
-              <directory>reactapp</directory>
-              <targetPath>reactapp</targetPath>
             </resource>
             <resource>
                 <directory>${project.parent.basedir}/db-scripts/src/main/resources</directory>
