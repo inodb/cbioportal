@@ -14,9 +14,9 @@ From the [GitHub Help Page of Using Pull Requests](https://help.github.com/artic
 
 The cBioPortal currently maintains three branches:
 
- * **master**:  this is the most stable branch, reflecting that currently running in production on cbioportal.org.
- * **rc**:  release candidate branch, reflecting the next release candidate we are readying for deployment.  Once deployed to production, the rc branch is merged into master.
- * **hotfix**:  hot fix branch, used only for mission critical bug fixes that must be pushed out immediately.  Once deployed to production, the hotfix branch is merged into master. 
+ * **master**:  this reflects what is currently running in production on cbioportal.org. Bug fixes and documentation fixes go here.
+ * **rc**:  release candidate branch, incorporating all the latest features. You could see our **rc** branch as a development branch where we only accept high quality contributions. Once ready for testing on cbioportal.org/beta a new branch is formed with the name **release-x.y.z**.
+ *  **release-x.y.z**: before each release a new branch is created from **rc** that has a name like **release-x.y.z** .This one is usually deployed to www.cbioportal.org/beta. 
 
 ## Getting Started
 
@@ -85,22 +85,6 @@ Once you downloaded the images you do the following for each screenshot:
   should fix your PR.
 - If the change in the screenshot is **desired**, add the screenshot to the
   repo, commit it and push it to your PR's branch.
-
-## Pull Request Merging Policy
-Pull Requests (PRs) are reviewed by the
-[backend](https://github.com/orgs/cBioPortal/teams/backend),
-[frontend](https://github.com/orgs/cBioPortal/teams/frontend) and
-[devops](https://github.com/orgs/cBioPortal/teams/devops) teams of cBioPortal.
-For each PR the submitter should propose what team(s) is/are appropriate to
-review it. This is the current merging policy:
-
-- A documentation change needs one **Approve**
-- A simple bugfix to rc or hotfix requires one **Approve**
-- A new feature requires two **Approve**. One from someone at MSKCC and one from
-  another institution.
-
-If these requirements are met, any person with merge rights can merge to rc or
-hotfix.
 
 ## Pull Request Reviewers Guide
 Here we describe the guidelines for the reviewer. Always follow the checks in
