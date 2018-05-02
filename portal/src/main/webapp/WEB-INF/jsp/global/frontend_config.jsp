@@ -83,9 +83,11 @@ window.localdist = localStorage.getItem("localdist") === "true";
 
 if (window.localdist || window.localdev) {
 	window.frontendConfig.frontendUrl = '//localhost:3000/'
+	localStorage.setItem("e2etest", "true");
 } else if (localStorage.heroku) {
 	var herokuInstance = '//' + localStorage.getItem('heroku') + '.herokuapp.com/';
 	window.frontendConfig.frontendUrl = herokuInstance;
+	localStorage.setItem("e2etest", "true");
 }
 // clean userEmailAddress config
 if (!window.frontendConfig.userEmailAddress || window.frontendConfig.userEmailAddress === 'anonymousUser') {
