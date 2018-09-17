@@ -27,6 +27,9 @@
     <!-- We are autowiring some components from web into the customPermissionEvaluator below -->
     <context:component-scan base-package="org.cbioportal.web.util" />
 
+    <!-- Hack to make the EmbeddedValueResolver available outside the context. -->
+    <b:bean id="embeddedValueResolverProvider" class="org.mskcc.cbio.portal.util.EmbeddedValueResolverProvider" />
+
     <!-- support for general annotations within class definitions (used in AccessControl) -->
     <context:annotation-config/>
 

@@ -261,6 +261,22 @@ public class GlobalProperties {
     @Value("${show.genomenexus:true}") // default is true
     public void setShowGenomeNexus(String property) { showGenomeNexus = Boolean.parseBoolean(property); }
 
+    /**
+     * Resolve property name to value using the bean factory
+     */
+    public static String resolveProperty(String name) {
+        String query = "${" + name + "}";
+        try {
+            String result = EmbeddedValueResolverProvider.getResolver().resolveStringValue(query);
+            if (query.equals(result) || result == null || result.equals(""))
+                return null;
+            else
+                return result;
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
 	/*
      * Trim whitespace of url and append / if it does not exist. Return empty
      * string otherwise.

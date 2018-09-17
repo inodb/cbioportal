@@ -25,6 +25,9 @@
         </property>
     </bean>
 
+     <!-- Hack to make the EmbeddedValueResolver available outside the context. -->
+    <bean id="embeddedValueResolverProvider" class="org.mskcc.cbio.portal.util.EmbeddedValueResolverProvider" />
+
     <bean name="/applicationSwaggerConfig" class="org.cbioportal.web.config.SwaggerConfig"/>
     <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor">
         <property name="validator">

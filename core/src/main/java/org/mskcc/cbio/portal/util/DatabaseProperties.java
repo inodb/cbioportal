@@ -52,13 +52,13 @@ public class DatabaseProperties {
     public static DatabaseProperties getInstance() {
         if (dbProperties == null) {
             dbProperties = new DatabaseProperties();
-            //  Get DB Properties from portal.properties.
-            dbProperties.setDbHost(GlobalProperties.getProperty("db.host"));
-            dbProperties.setDbName(GlobalProperties.getProperty("db.portal_db_name"));
-            dbProperties.setDbUser(GlobalProperties.getProperty("db.user"));
-            dbProperties.setDbPassword(GlobalProperties.getProperty("db.password"));
-            dbProperties.setDbEncryptedKey(GlobalProperties.getProperty("db.encryptedKey"));
-            dbProperties.setDbDriverClassName(GlobalProperties.getProperty("db.driver"));
+            //  Get DB Properties
+            dbProperties.setDbHost(GlobalProperties.resolveProperty("db.host"));
+            dbProperties.setDbName(GlobalProperties.resolveProperty("db.portal_db_name"));
+            dbProperties.setDbUser(GlobalProperties.resolveProperty("db.user"));
+            dbProperties.setDbPassword(GlobalProperties.resolveProperty("db.password"));
+            dbProperties.setDbEncryptedKey(GlobalProperties.resolveProperty("db.encryptedKey"));
+            dbProperties.setDbDriverClassName(GlobalProperties.resolveProperty("db.driver"));
         }
         return dbProperties;
     }
