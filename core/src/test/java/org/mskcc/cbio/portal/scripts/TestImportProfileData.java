@@ -87,14 +87,12 @@ public class TestImportProfileData {
         runner.run();
         //This test is to check if the ImportProfileData class indeed adds the study stable Id in front of the
         //dataset study id (e.g. studyStableId + "_breast_mutations"):
-        DaoClinicalData.deleteRecords("MUTATION_COUNT");
-        MySQLbulkLoader.flushAll();
         String studyStableId = "study_tcga_pub";
         studyId = DaoCancerStudy.getCancerStudyByStableId(studyStableId).getInternalId();
         int sampleId = DaoSample.getSampleByCancerStudyAndSampleId(studyId, "TCGA-AA-3664-01").getInternalId();
         int secondSampleId = DaoSample.getSampleByCancerStudyAndSampleId(studyId, "TCGA-AA-3665-01").getInternalId();
         geneticProfileId = DaoGeneticProfile.getGeneticProfileByStableId(studyStableId + "_breast_mutations").getGeneticProfileId();
-        validateMutationAminoAcid (geneticProfileId, sampleId, 54407, "T433A");
+        validateMutationAminoAcid(geneticProfileId, sampleId, 54407, "T433A");
         // data for this sample should not exist before loading the next data file
         assertEquals(DaoMutation.getMutations(geneticProfileId, secondSampleId).size(), 0);
         // load a second mutation data file
