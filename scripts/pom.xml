@@ -67,10 +67,10 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
               <artifactSet>
                 <excludes>
                   <exclude>org.bouncycastle:bcprov-jdk15</exclude>
-                  <exclude>*0-unknown-version-SNAPSHOT*</exclude>
                 </excludes>
               </artifactSet>
               <transformers>
