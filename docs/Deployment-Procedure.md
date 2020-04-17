@@ -192,7 +192,7 @@ These are all cBioPortal databases and their locations:
 | Website  | Database | Location |
 | ------------- | ------------- | ------------- |
 | cbioportal.mskcc.org  | cgds_gdac  | pipelines |
-| cbioportal.org  | cgds_public  | pipelines |
+| cbioportal.org  | cgds_public  | AWS |
 | genie.cbioportal.org | cgds_genie | AWS | 
 | triage.cbioportal.org | cgds_triage | pipelines |
 
