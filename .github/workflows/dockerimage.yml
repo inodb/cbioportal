@@ -11,20 +11,21 @@ jobs:
       steps:
         - name: 'Checkout git repo'
           uses: actions/checkout@v1
-        - name: Extract branch name
-          run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
-          id: extract_branch
+        - name: Extract branch or tag name
+          # GITHUB_REF like refs/head/branch_name or refs/tag/tag_name
+          # want to strip v from version as well
+          run: echo "##[set-output name=clean_ref;]$(echo ${GITHUB_REF##*/} | sed 's/^v//g')"
+          id: extract_branch_or_tag_name
         - name: 'Docker build with cache'
           uses: whoan/docker-build-with-cache-action@v4
           with:
-            username: inodb
-            password: "${{ secrets.GITHUB_TOKEN }}"
+            username: "${{ secrets.DOCKER_USERNAME }}"
+            password: "${{ secrets.DOCKER_PASSWORD }}"
             image_name: inodb/cbioportal
-            image_tag: ${{ steps.extract_branch.outputs.branch }}-web-shenandoah
+            image_tag: ${{ steps.extract_branch_or_tag.outputs.clean_ref }}-web-shenandoah
             context: .
             dockerfile: docker/web/Dockerfile
-            registry: docker.pkg.github.com
-            pull_image_and_stages: false
+            pull_image_and_stages: true
             push_git_tag: true
             
             
