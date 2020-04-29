@@ -3,6 +3,7 @@ on:
   push:
     branches: 
       - tag-github-action
+    tags: '*'
 
 jobs:
   build_and_publish_web:
