@@ -12,14 +12,14 @@ jobs:
         - name: 'Checkout git repo'
           uses: actions/checkout@v1
         - name: Extract branch name
-          run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
           id: extract_branch
         - name: 'Docker build with cache'
           uses: whoan/docker-build-with-cache-action@v4
           with:
             username: inodb
             password: "${{ secrets.GITHUB_TOKEN }}"
-            image_name: cbioportal/cbioportal
+            image_name: inodb/cbioportal
             image_tag: ${{ steps.extract_branch.outputs.branch }}-web-shenandoah
             context: .
             dockerfile: docker/web/Dockerfile
