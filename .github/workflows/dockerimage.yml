@@ -15,14 +15,14 @@ jobs:
           # GITHUB_REF like refs/head/branch_name or refs/tag/tag_name
           # want to strip v from version as well
           run: echo "##[set-output name=clean_ref;]$(echo ${GITHUB_REF##*/} | sed 's/^v//g')"
-          id: extract_branch_or_tag_name
+          id: extract_clean_ref_name
         - name: 'Docker build with cache'
-          uses: whoan/docker-build-with-cache-action@v4
+          uses: whoan/docker-build-with-cache-action@v5
           with:
             username: "${{ secrets.DOCKER_USERNAME }}"
             password: "${{ secrets.DOCKER_PASSWORD }}"
             image_name: inodb/cbioportal
-            image_tag: ${{ steps.extract_branch_or_tag.outputs.clean_ref }}-web-shenandoah
+            image_tag: ${{ steps.extract_clean_ref_name.outputs.clean_ref }}-web-shenandoah
             context: .
             dockerfile: docker/web/Dockerfile
             pull_image_and_stages: true
