@@ -27,7 +27,6 @@ jobs:
             context: .
             dockerfile: docker/web/Dockerfile
             pull_image_and_stages: true
-            push_git_tag: true
             
             
 # Reference: https://github.com/marketplace/actions/build-docker-images-using-cache
