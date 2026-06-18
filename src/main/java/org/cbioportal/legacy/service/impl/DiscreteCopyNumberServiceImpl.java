@@ -244,7 +244,7 @@ public class DiscreteCopyNumberServiceImpl implements DiscreteCopyNumberService 
     discreteCopyNumberData.setSampleId(molecularData.getSampleId());
     discreteCopyNumberData.setEntrezGeneId(molecularData.getEntrezGeneId());
     discreteCopyNumberData.setGene(molecularData.getGene());
-    discreteCopyNumberData.setAlteration(Integer.parseInt(molecularData.getValue()));
+    discreteCopyNumberData.setAlteration(toDiscreteValue(molecularData.getValue()));
 
     return discreteCopyNumberData;
   }
@@ -266,11 +266,35 @@ public class DiscreteCopyNumberServiceImpl implements DiscreteCopyNumberService 
 
     boolean result;
     try {
-      result = alterationTypes.contains(Integer.parseInt(molecularData.getValue()));
+      result = alterationTypes.contains(toDiscreteValue(molecularData.getValue()));
     } catch (NumberFormatException ex) {
       result = false;
     }
     return result;
+  }
+
+  /**
+   * Converts a CNA value string (which may be a non-integer float) to a discrete integer using
+   * standard cBioPortal thresholds:
+   *   value <= -1.5 → -2 (Deep Deletion)
+   *   -1.5 < value <= -0.5 → -1 (Shallow Deletion)
+   *   -0.5 < value < 0.5 → 0 (Diploid)
+   *   0.5 <= value < 1.5 → 1 (Gain)
+   *   value >= 1.5 → 2 (Amplification)
+   */
+  static int toDiscreteValue(String value) {
+    double v = Double.parseDouble(value);
+    if (v <= -1.5) {
+      return -2;
+    } else if (v <= -0.5) {
+      return -1;
+    } else if (v < 0.5) {
+      return 0;
+    } else if (v < 1.5) {
+      return 1;
+    } else {
+      return 2;
+    }
   }
 
   private MolecularProfile validateMolecularProfile(String molecularProfileId)

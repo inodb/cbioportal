@@ -142,6 +142,111 @@ public class DiscreteCopyNumberServiceImplTest extends BaseServiceImplTest {
   }
 
   @Test
+  public void getDiscreteCopyNumbersInMultipleMolecularProfilesFloatValuesThresholded() {
+    // Float CNA values (e.g. -1.5) should be thresholded to discrete integers
+    List<GeneMolecularData> returned =
+        Arrays.asList(
+            geneMolecularData("sample1", "study1", "-1.5"),  // exactly -1.5 → -2
+            geneMolecularData("sample2", "study1", "-1.4"),  // > -1.5 → -1
+            geneMolecularData("sample3", "study1", "-0.5"),  // exactly -0.5 → -1
+            geneMolecularData("sample4", "study1", "-0.4"),  // > -0.5 → 0
+            geneMolecularData("sample5", "study1", "0.4"),   // < 0.5 → 0
+            geneMolecularData("sample6", "study1", "0.5"),   // exactly 0.5 → 1
+            geneMolecularData("sample7", "study1", "1.4"),   // < 1.5 → 1
+            geneMolecularData("sample8", "study1", "1.5"),   // exactly 1.5 → 2
+            geneMolecularData("sample9", "study1", "2.3"));  // > 1.5 → 2
+
+    List<String> profiles = Arrays.asList("profile1", "profile2");
+    List<String> samples = Arrays.asList("sample1", "sample2");
+    List<CNA> alterationTypes =
+        Arrays.asList(CNA.AMP, CNA.HOMDEL, CNA.DIPLOID, CNA.GAIN, CNA.HETLOSS);
+    GeneFilterQuery query = new GeneFilterQuery();
+    query.setAlterations(alterationTypes);
+    List<GeneFilterQuery> geneQueries = Arrays.asList(query);
+    Mockito.when(
+            molecularDataService.getMolecularDataInMultipleMolecularProfilesByGeneQueries(
+                anyList(), anyList(), anyList(), anyString()))
+        .thenReturn(returned);
+
+    List<DiscreteCopyNumberData> actual =
+        discreteCopyNumberService.getDiscreteCopyNumbersInMultipleMolecularProfilesByGeneQueries(
+            profiles, samples, geneQueries, PROJECTION);
+    List<DiscreteCopyNumberData> expected =
+        Arrays.asList(
+            discreteCopyNumberData("sample1", "study1", -2),
+            discreteCopyNumberData("sample2", "study1", -1),
+            discreteCopyNumberData("sample3", "study1", -1),
+            discreteCopyNumberData("sample4", "study1", 0),
+            discreteCopyNumberData("sample5", "study1", 0),
+            discreteCopyNumberData("sample6", "study1", 1),
+            discreteCopyNumberData("sample7", "study1", 1),
+            discreteCopyNumberData("sample8", "study1", 2),
+            discreteCopyNumberData("sample9", "study1", 2));
+
+    Assert.assertEquals(toStrings(expected), toStrings(actual));
+  }
+
+  @Test
+  public void fetchDiscreteCopyNumbersFloatValueFilteredCorrectly() throws Exception {
+    // -1.5 should be thresholded to -2, so it should match when alterationTypes contains -2
+    createMolecularProfile();
+
+    List<GeneMolecularData> molecularDataList = new ArrayList<>();
+    GeneMolecularData molecularData = new GeneMolecularData();
+    molecularData.setValue("-1.5");
+    molecularData.setMolecularProfileId(MOLECULAR_PROFILE_ID);
+    molecularData.setSampleId(SAMPLE_ID1);
+    molecularData.setEntrezGeneId(ENTREZ_GENE_ID_1);
+    Gene gene = new Gene();
+    molecularData.setGene(gene);
+    molecularDataList.add(molecularData);
+
+    Mockito.when(
+            molecularDataService.fetchMolecularData(
+                MOLECULAR_PROFILE_ID,
+                Arrays.asList(SAMPLE_ID1),
+                Arrays.asList(ENTREZ_GENE_ID_1),
+                PROJECTION))
+        .thenReturn(molecularDataList);
+
+    // Request ALL alteration types (includes -1 which triggers non-homdel-or-amp path)
+    List<Integer> alterationTypes = Arrays.asList(-2, -1, 0, 1, 2);
+
+    List<DiscreteCopyNumberData> result =
+        discreteCopyNumberService.fetchDiscreteCopyNumbersInMolecularProfile(
+            MOLECULAR_PROFILE_ID,
+            Arrays.asList(SAMPLE_ID1),
+            Arrays.asList(ENTREZ_GENE_ID_1),
+            alterationTypes,
+            PROJECTION);
+
+    Assert.assertEquals(1, result.size());
+    DiscreteCopyNumberData resultData = result.get(0);
+    Assert.assertEquals((Integer) (-2), resultData.getAlteration());
+    Assert.assertEquals(MOLECULAR_PROFILE_ID, resultData.getMolecularProfileId());
+    Assert.assertEquals(SAMPLE_ID1, resultData.getSampleId());
+  }
+
+  @Test
+  public void toDiscreteValueThresholdsCorrectly() {
+    // Test boundary conditions for the thresholding logic
+    Assert.assertEquals(-2, DiscreteCopyNumberServiceImpl.toDiscreteValue("-2.0"));
+    Assert.assertEquals(-2, DiscreteCopyNumberServiceImpl.toDiscreteValue("-1.5"));
+    Assert.assertEquals(-1, DiscreteCopyNumberServiceImpl.toDiscreteValue("-1.4"));
+    Assert.assertEquals(-1, DiscreteCopyNumberServiceImpl.toDiscreteValue("-1.0"));
+    Assert.assertEquals(-1, DiscreteCopyNumberServiceImpl.toDiscreteValue("-0.5"));
+    Assert.assertEquals(0, DiscreteCopyNumberServiceImpl.toDiscreteValue("-0.49"));
+    Assert.assertEquals(0, DiscreteCopyNumberServiceImpl.toDiscreteValue("0"));
+    Assert.assertEquals(0, DiscreteCopyNumberServiceImpl.toDiscreteValue("0.49"));
+    Assert.assertEquals(1, DiscreteCopyNumberServiceImpl.toDiscreteValue("0.5"));
+    Assert.assertEquals(1, DiscreteCopyNumberServiceImpl.toDiscreteValue("1.0"));
+    Assert.assertEquals(1, DiscreteCopyNumberServiceImpl.toDiscreteValue("1.4"));
+    Assert.assertEquals(2, DiscreteCopyNumberServiceImpl.toDiscreteValue("1.5"));
+    Assert.assertEquals(2, DiscreteCopyNumberServiceImpl.toDiscreteValue("2.0"));
+    Assert.assertEquals(2, DiscreteCopyNumberServiceImpl.toDiscreteValue("2.3"));
+  }
+
+  @Test
   public void getDiscreteCopyNumbersInMultipleMolecularProfilesEmptyAlterationTypes() {
     List<GeneMolecularData> returned =
         Arrays.asList(
